@@ -66,7 +66,7 @@ class Home extends Component {
     }
 
     componentWillMount() {
-        // Get upcoming movies
+        // API calls to retrieve the upcoming movies
         let data = null;
         let xhr = new XMLHttpRequest();
         let that = this;
@@ -82,7 +82,7 @@ class Home extends Component {
         xhr.setRequestHeader("Cache-Control", "no-cache");
         xhr.send(data);
 
-        // Get released movies
+        // API calls to retrieve the upcoming movies
         let dataReleased = null;
         let xhrReleased = new XMLHttpRequest();
         xhrReleased.addEventListener("readystatechange", function () {
@@ -97,7 +97,7 @@ class Home extends Component {
         xhrReleased.setRequestHeader("Cache-Control", "no-cache");
         xhrReleased.send(dataReleased);
 
-        // Get filters
+        // API calls to implement the filters
         let dataGenres = null;
         let xhrGenres = new XMLHttpRequest();
         xhrGenres.addEventListener("readystatechange", function () {
@@ -112,7 +112,7 @@ class Home extends Component {
         xhrGenres.setRequestHeader("Cache-Control", "no-cache");
         xhrGenres.send(dataGenres);
 
-        // Get artists
+        // API calls to get the data of artists
         let dataArtists = null;
         let xhrArtists = new XMLHttpRequest();
         xhrArtists.addEventListener("readystatechange", function () {
@@ -128,51 +128,56 @@ class Home extends Component {
         xhrArtists.send(dataArtists);
     }
 
-    movieNameChangeHandler = event => {
-        this.setState({ movieName: event.target.value });
+   //event to be triggered when user clicks on movie
+    movieClickHandler = (movieId) => {
+        this.props.history.push('/movie/' + movieId);
     }
-
     genreSelectHandler = event => {
         this.setState({ genres: event.target.value });
     }
 
-    artistSelectHandler = event => {
-        this.setState({ artists: event.target.value });
+   //event to be triggered when user change the movies
+    movieNameChangeHandler = event => {
+        this.setState({ movieName: event.target.value });
     }
-
+    //event to be triggered when user clicks on release date
     releaseDateStartHandler = event => {
         this.setState({ releaseDateStart: event.target.value });
     }
 
+   //event to be triggered when user clicks on release end date
     releaseDateEndHandler = event => {
         this.setState({ releaseDateEnd: event.target.value });
     }
-
-    movieClickHandler = (movieId) => {
-        this.props.history.push('/movie/' + movieId);
+    artistSelectHandler = event => {
+        this.setState({ artists: event.target.value });
     }
 
+    
+
     filterApplyHandler = () => {
-        let queryString = "?status=RELEASED";
+        let query = "?status=RELEASED";
         if (this.state.movieName !== "") {
-            queryString += "&title=" + this.state.movieName;
+            query += "&title=" + this.state.movieName;
         }
-        if (this.state.genres.length > 0) {
-            queryString += "&genres=" + this.state.genres.toString();
-        }
-        if (this.state.artists.length > 0) {
-            queryString += "&artists=" + this.state.artists.toString();
-        }
+                
         if (this.state.releaseDateStart !== "") {
-            queryString += "&start_date=" + this.state.releaseDateStart;
+            query += "&start_date=" + this.state.releaseDateStart;
         }
         if (this.state.releaseDateEnd !== "") {
-            queryString += "&end_date=" + this.state.releaseDateEnd;
+            query += "&end_date=" + this.state.releaseDateEnd;
+        }
+        if (this.state.genres.length > 0) {
+            query += "&genres=" + this.state.genres.toString();
+        }
+        if (this.state.artists.length > 0) {
+            query += "&artists=" + this.state.artists.toString();
         }
 
-        let that = this;
+        
         let dataFilter = null;
         let xhrFilter = new XMLHttpRequest();
+        let that = this;
         xhrFilter.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 that.setState({
@@ -181,7 +186,7 @@ class Home extends Component {
             }
         });
 
-        xhrFilter.open("GET", this.props.baseUrl + "movies" + encodeURI(queryString));
+        xhrFilter.open("GET", this.props.baseUrl + "movies" + encodeURI(query));
         xhrFilter.setRequestHeader("Cache-Control", "no-cache");
         xhrFilter.send(dataFilter);
     }
@@ -206,7 +211,7 @@ class Home extends Component {
                 </GridList>
 
                 <div className="flex-container">
-                    <div className="left">
+                    <div className="leftdiv">
                         <GridList cellHeight={350} cols={4} className={classes.gridListMain}>
                             {this.state.releasedMovies.map(movie => (
                                 <GridListTile onClick={() => this.movieClickHandler(movie.id)} className="released-movie-grid-item" key={"grid" + movie.id}>
@@ -219,7 +224,7 @@ class Home extends Component {
                             ))}
                         </GridList>
                     </div>
-                    <div className="right">
+                    <div className="rightdiv">
                         <Card>
                             <CardContent>
                                 <FormControl className={classes.formControl}>
@@ -227,12 +232,12 @@ class Home extends Component {
                                         FIND MOVIES BY:
                                     </Typography>
                                 </FormControl>
-
+                                <br />
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="movieName">Movie Name</InputLabel>
                                     <Input id="movieName" onChange={this.movieNameChangeHandler} />
                                 </FormControl>
-
+                                <br />
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="select-multiple-checkbox">Genres</InputLabel>
                                     <Select
@@ -250,9 +255,12 @@ class Home extends Component {
                                         ))}
                                     </Select>
                                 </FormControl>
+                                <br />
 
                                 <FormControl className={classes.formControl}>
+                                
                                     <InputLabel htmlFor="select-multiple-checkbox">Artists</InputLabel>
+
                                     <Select
                                         multiple
                                         input={<Input id="select-multiple-checkbox" />}
@@ -268,8 +276,10 @@ class Home extends Component {
                                         ))}
                                     </Select>
                                 </FormControl>
+                                <br />
 
                                 <FormControl className={classes.formControl}>
+                            
                                     <TextField
                                         id="releaseDateStart"
                                         label="Release Date Start"
@@ -279,8 +289,10 @@ class Home extends Component {
                                         onChange={this.releaseDateStartHandler}
                                     />
                                 </FormControl>
+                                <br />
 
                                 <FormControl className={classes.formControl}>
+                                
                                     <TextField
                                         id="releaseDateEnd"
                                         label="Release Date End"
@@ -291,6 +303,7 @@ class Home extends Component {
                                     />
                                 </FormControl>
                                 <br /><br />
+
                                 <FormControl className={classes.formControl}>
                                     <Button onClick={() => this.filterApplyHandler()} variant="contained" color="primary">
                                         APPLY

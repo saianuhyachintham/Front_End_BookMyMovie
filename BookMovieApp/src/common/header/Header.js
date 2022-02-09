@@ -35,6 +35,7 @@ const TabContainer = function (props) {
 TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 }
+//header page components
 
 class Header extends Component {
 
@@ -45,23 +46,23 @@ class Header extends Component {
             value: 0,
             usernameRequired: "dispNone",
             username: "",
-            loginPasswordRequired: "dispNone",
-            loginPassword: "",
             firstnameRequired: "dispNone",
             firstname: "",
+            loginPasswordRequired: "dispNone",
+            loginPassword: "",
             lastnameRequired: "dispNone",
             lastname: "",
-            emailRequired: "dispNone",
-            email: "",
             registerPasswordRequired: "dispNone",
             registerPassword: "",
+            emailRequired: "dispNone",
+            email: "",
             contactRequired: "dispNone",
             contact: "",
             registrationSuccess: false,
             loggedIn: sessionStorage.getItem("access-token") == null ? false : true
         }
     }
-
+//register/login modal event
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true,
@@ -83,14 +84,8 @@ class Header extends Component {
         });
     }
 
-    closeModalHandler = () => {
-        this.setState({ modalIsOpen: false });
-    }
-
-    tabChangeHandler = (event, value) => {
-        this.setState({ value });
-    }
-
+    
+//An event triggered when clicked on login
     loginClickHandler = () => {
         this.state.username === "" ? this.setState({ usernameRequired: "dispBlock" }) : this.setState({ usernameRequired: "dispNone" });
         this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
@@ -117,7 +112,7 @@ class Header extends Component {
         xhrLogin.setRequestHeader("Cache-Control", "no-cache");
         xhrLogin.send(dataLogin);
     }
-
+//event to be triggered when 
     inputUsernameChangeHandler = (e) => {
         this.setState({ username: e.target.value });
     }
@@ -125,7 +120,12 @@ class Header extends Component {
     inputLoginPasswordChangeHandler = (e) => {
         this.setState({ loginPassword: e.target.value });
     }
-
+    closeModalHandler = () => {
+        this.setState({ modalIsOpen: false });
+    }
+    tabChangeHandler = (event, value) => {
+        this.setState({ value });
+    }
     registerClickHandler = () => {
         this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
         this.state.lastname === "" ? this.setState({ lastnameRequired: "dispBlock" }) : this.setState({ lastnameRequired: "dispNone" });
@@ -140,6 +140,7 @@ class Header extends Component {
             "mobile_number": this.state.contact,
             "password": this.state.registerPassword
         });
+        
 
         let xhrSignup = new XMLHttpRequest();
         let that = this;
@@ -164,19 +165,17 @@ class Header extends Component {
     inputLastNameChangeHandler = (e) => {
         this.setState({ lastname: e.target.value });
     }
-
-    inputEmailChangeHandler = (e) => {
-        this.setState({ email: e.target.value });
+   
+    inputContactChangeHandler = (e) => {
+        this.setState({ contact: e.target.value });
     }
+
 
     inputRegisterPasswordChangeHandler = (e) => {
         this.setState({ registerPassword: e.target.value });
     }
 
-    inputContactChangeHandler = (e) => {
-        this.setState({ contact: e.target.value });
-    }
-
+    
     logoutHandler = (e) => {
         sessionStorage.removeItem("uuid");
         sessionStorage.removeItem("access-token");
@@ -184,6 +183,9 @@ class Header extends Component {
         this.setState({
             loggedIn: false
         });
+    }
+    inputEmailChangeHandler = (e) => {
+        this.setState({ email: e.target.value });
     }
 
     render() {
