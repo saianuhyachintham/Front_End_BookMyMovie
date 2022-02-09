@@ -112,7 +112,7 @@ class Header extends Component {
         xhrLogin.setRequestHeader("Cache-Control", "no-cache");
         xhrLogin.send(dataLogin);
     }
-//event to be triggered when 
+//event to be triggered when user attempt to change the name
     inputUsernameChangeHandler = (e) => {
         this.setState({ username: e.target.value });
     }
@@ -123,6 +123,7 @@ class Header extends Component {
     closeModalHandler = () => {
         this.setState({ modalIsOpen: false });
     }
+    //Event to be triggered when the user changes the tab login/register
     tabChangeHandler = (event, value) => {
         this.setState({ value });
     }
@@ -141,7 +142,7 @@ class Header extends Component {
             "password": this.state.registerPassword
         });
         
-
+        //API calls to signup to the application
         let xhrSignup = new XMLHttpRequest();
         let that = this;
         xhrSignup.addEventListener("readystatechange", function () {
